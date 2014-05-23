@@ -11,6 +11,7 @@ angular.module('application', ['dependency1', 'dependency2', 'dependency3'])
   });
 ```
 
+
 ## Dependency Injection
 
 AngularJS is only capable of wiring up objects it is aware of. As a consequence, the very first step for plugging into DI machinery is to register an object with an AngularJS module. ***We are not registering the object's instance directly, rather we are throwing object-creation recipes into the AngularJS dependency injection system.***
@@ -25,6 +26,7 @@ The `$provider` provides the following registration mechanism:
 4. `.factory(name, recipe)`
 5. `.provider(name, recipe)`
 
+
 ### Constant
 
 The idea of this is usually you have some **constants** across all your application and the property you are looking for is "this value do not change at runtime".
@@ -32,6 +34,7 @@ The idea of this is usually you have some **constants** across all your applicat
 ```js
 module.constant('MAX_VALUE', 64);
 ```
+
 
 ### Value
 
@@ -42,6 +45,7 @@ module.value('strfmt', {
   fmt: function (format, input) { ... }
 })
 ```
+
 
 ### Service
 
@@ -61,6 +65,7 @@ module.service('Dog', Dog);
 > NOTE: Each time you request this service you will get the same instance, it works as a singleton.
 >
 
+
 ### Factory
 
 Sometimes you will need more support from the DI system, for example allocate some private variables before create an instance, or any pre-processing you require before be able to create an object.
@@ -78,6 +83,7 @@ module.factory('Dog', function() {
 ```
 
 Internally this is a short hand for `$provide.provider(name, {$get: $getFn})`.
+
 
 ### Provider
 
@@ -103,12 +109,12 @@ module.provider('Dog', function() {
 });
 ```
 
+
 ## Modules lifecycle
 
 Two phases:
 
 1. **The configuration phase:** It is the phase where all the recipes are collected and configured.
-
 2. **The run phase:** It is the phase where we can execute any post-instantiation logic.
 
 As an example of config phase:
