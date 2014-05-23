@@ -5,7 +5,7 @@ A module acts as a container for other AngularJS managed objects (controllers, s
 For example, we could define a `application` module, with some dependencies and attach a controller:
 
 ```js
-angular.module('application', ['dependency1', 'dependency2', 'dependency3'])  
+angular.module('application', ['dependency1', 'dependency2', 'dependency3'])
   .controller('HelloCtrl', function HelloCtrl() {
     console.log('My first controller');
   });
@@ -85,7 +85,7 @@ Finally Angular provides another abtraction level over **factory**. It is as sim
 
 ```js
 module.provider('Dog', function() {
-  
+
   // Put here any custom configuration or initialization.
 
   return {
@@ -119,6 +119,7 @@ myMod.config(function(notificationsServiceProvider)) {
 });
 ```
 
+
 ## Modules and services visibility
 
 A service defined in one of the application's modules is visible to all the other modules. In other words, hierarchy of modules doesn't influence services' visibility to other modules. When AngularJS bootstraps an application, it combines all the services defined across all the modules into one application, that is, global namespace.
@@ -126,6 +127,7 @@ A service defined in one of the application's modules is visible to all the othe
 1. Services override are allowed.
 2. This requires an extra effort to prevent colletions and keep them manageable (conventions!!).
 3. If you use something from a module, do not forget to include it as part the modules hierarchy.
+
 
 ## How $injector handle dependencies
 
