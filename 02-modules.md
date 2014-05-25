@@ -1,15 +1,15 @@
 # Modules and Dependency Injection
 
-A module acts as a container for other AngularJS managed objects (controllers, services, and so on).
 
-For example, we could define a `application` module, with some dependencies and attach a controller:
+## Intro
+
+A module acts as a container for AngularJS managed objects (e.x. controllers, services, and so on).
 
 ```js
 angular.module('application', ['dependency1', 'dependency2', 'dependency3'])
-  .controller('HelloCtrl', function HelloCtrl() {
-    console.log('My first controller');
-  });
 ```
+
+At high level, when you define a module, you are basically defining a namespace where you could define behaviors by name and reuse them anywhere you include the module.
 
 
 ## Dependency Injection
@@ -45,6 +45,8 @@ module.value('strfmt', {
   fmt: function (format, input) { ... }
 })
 ```
+
+We could hook libraries using this approach, instead of provide our object, we could just use a library API.
 
 
 ### Service
@@ -82,7 +84,7 @@ module.factory('Dog', function() {
 });
 ```
 
-Internally this is a short hand for `$provide.provider(name, {$get: $getFn})`.
+Internally this is a short hand for `$provide.provider(name, {$get: $getFn})`, continue reading for details.
 
 
 ### Provider
@@ -117,12 +119,37 @@ Two phases:
 1. **The configuration phase:** It is the phase where all the recipes are collected and configured.
 2. **The run phase:** It is the phase where we can execute any post-instantiation logic.
 
+```js
+angular.module('myModule', [])
+  .config(function(injectables) { // provider-injector
+    // This is an example of config block.
+    // You can have as many of these as you want.
+    // You can only inject Providers (not instances)
+    // into config blocks.
+  })
+  .run(function(injectables) { // instance-injector
+    // This is an example of a run block.
+    // You can have as many of these as you want.
+    // You can only inject instances (not Providers)
+    // into run blocks
+  });
+```
+
 As an example of config phase:
 
 ```js
-myMod.config(function(notificationsServiceProvider)) {
+module.config(function(notificationsServiceProvider)) {
     notificationsServiceProvider.setMaxLen(5);
 });
+```
+
+As an example of run phase:
+
+```js
+module.run(function($rootScope) {
+  // track startup
+  console.log($rootScope.appStarted = new Date());
+})
 ```
 
 
@@ -154,3 +181,8 @@ $injector.invoke(['serviceA', function(serviceA){}]);
 
 You will find the 3 ways of express dependencies, they are all the same, so you could choose your prefered style.
 
+## Additional content
+
+- [Official module guide](https://docs.angularjs.org/guide/module)
+- [$provide api](https://code.angularjs.org/1.2.16/docs/api/auto/object/$provide)
+- [$injector service](https://code.angularjs.org/1.2.16/docs/api/auto/service/$injector)
