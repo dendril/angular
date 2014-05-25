@@ -9,7 +9,30 @@ A module acts as a container for AngularJS managed objects (e.x. controllers, se
 angular.module('application', ['dependency1', 'dependency2', 'dependency3'])
 ```
 
-At high level, when you define a module, you are basically defining a namespace where you could define behaviors by name and reuse them anywhere you include the module.
+At high level, when you define a module, you are basically defining a namespace where you could add behaviors by name and reuse them anywhere you include the module.
+
+Becareful about modules definition because:
+
+```js
+angular.module('myModule', []) // module definition
+angular.module('myModule')     // module getter for extension
+angular.module('myModule', ['dep1', ...]) // complete module redefinition
+```
+
+You wont get any advice about redefinitions, and it's extremelly easy to fall into this scenario in large codebases. There are 2 recommendations:
+
+1. One module per file.
+2. Use *global variables* to allocate module definitions:
+
+    ```js
+    var myModule = angular.module('myModule', ['dep1', ...]) // module definition
+
+    // ... in another place in your codebase ...
+
+    myModule.service('name', function recipe() { ... });
+    ```
+
+Using any approach you will keep redefinitions under control.
 
 
 ## Dependency Injection

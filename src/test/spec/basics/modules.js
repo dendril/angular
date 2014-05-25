@@ -7,6 +7,34 @@ describe('Basics: Modules and DI', function() {
     myModule = angular.module('myModule', []);
   }));
 
+  it('allow complete module redefinition without warning', function() {
+    // Extend myModule definition
+    angular.module('myModule')
+      .value('api1', {
+        msg: function () {
+          return 0;
+        }
+      });
+
+    // Override myModule definition completetly
+    angular.module('myModule', ['dep'])
+      .service('api2', function (VALUE) {
+        return {
+          msg: function () {
+            return 1;
+          }
+        };
+      });
+
+    angular.module('dep', [])
+      .constant('VALUE', 1);
+
+    var $inj = angular.injector(['myModule']);
+
+    expect($inj.has('api1')).toBe(false);
+    expect($inj.get('api2').msg()).toBe(1);
+  });
+
   it('constant', function() {
     myModule.constant('MAX_VALUE', 10)
       .constant('MAX_VALUE', 101);
@@ -122,7 +150,7 @@ describe('Basics: Modules and DI', function() {
     expect(serviceCounter).toBe(1);
   });
 
-  it('overrides services without any limitation across modules', function() {
+  it('allow services override across modules', function() {
 
     // angular.module('app', ['engines', 'cars'])
     // angular.module('app', ['engines', 'cars', 'collision'])
@@ -132,7 +160,7 @@ describe('Basics: Modules and DI', function() {
     // angular.module('app', ['collision2', 'engines', 'cars', 'collision'])
     angular.module('app', ['engines', 'cars', 'collision3'])
       .factory('api', function(car) {
-        console.log('api');
+        // console.log('api');
 
         return {
           make: function make() {
@@ -143,7 +171,7 @@ describe('Basics: Modules and DI', function() {
 
     angular.module('cars', [])
       .factory('car', function(engine) {
-        console.log('car');
+        // console.log('car');
 
         return {
           create: function() {
@@ -154,7 +182,7 @@ describe('Basics: Modules and DI', function() {
 
     angular.module('engines', ['collision'])
       .factory('engine', function diesel() {
-        console.log('diesel');
+        // console.log('diesel');
 
         return {
           type: 'diesel'
@@ -163,7 +191,7 @@ describe('Basics: Modules and DI', function() {
 
     angular.module('collision', [])
       .factory('engine', function nafta() {
-        console.log('nafta');
+        // console.log('nafta');
 
         return {
           type: 'nafta'
@@ -172,7 +200,7 @@ describe('Basics: Modules and DI', function() {
 
     angular.module('collision2', [])
       .factory('engine', function solar() {
-        console.log('solar');
+        // console.log('solar');
 
         return {
           type: 'solar'
@@ -181,7 +209,7 @@ describe('Basics: Modules and DI', function() {
 
     angular.module('collision3', [])
       .factory('engine', function solar() {
-        console.log('nuclear');
+        // console.log('nuclear');
 
         return {
           type: 'nuclear'
@@ -191,12 +219,14 @@ describe('Basics: Modules and DI', function() {
     // Load all the modules hierarchy from app.
     var $inj = angular.injector(['app']);
 
+    // change it to 'nafta' and figure out the changes required to make it work
     expect($inj.get('api').make()).toEqual({
-      type: 'nuclear' // change it to 'nafta' and figure out the changes required to make it work
+      type: 'nuclear'
     });
 
+    // change it to 'nafta' and figure out the changes required to make it work
     expect($inj.get('engine')).toEqual({
-      type: 'nuclear' // change it to 'nafta' and figure out the changes required to make it work
+      type: 'nuclear'
     });
 
   });
