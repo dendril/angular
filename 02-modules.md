@@ -161,6 +161,7 @@ A service defined in one of the application's modules is visible to all the othe
 2. This requires an extra effort to prevent colletions and keep them manageable (conventions!!).
 3. If you use something from a module, do not forget to include it as part the modules hierarchy.
 
+Experimenting with services redefinition you will find they are instanciated in a [DFS](http://en.wikipedia.org/wiki/Depth-first_search) way based on the modules hierarchy.
 
 ## How $injector handle dependencies
 
