@@ -25,7 +25,7 @@ describe('Basics: Scope', function () {
     var child = parent.$new(true);
 
     parent.a = 10;
-    expect(child.a).toBe(void 0);
+    expect(child.a).toBeUndefined();
   }));
 
   it('should shadow properties if I define a property in the child', inject(function () {
@@ -59,7 +59,7 @@ describe('Basics: Scope', function () {
 
     parent.a = 12;
 
-    // Doesn't matter if I use parent or child
+    // Doesn't matter if I use parent or child in this call.
     child.$digest();
 
     expect(cb).toHaveBeenCalledWith(11, 11, child);
