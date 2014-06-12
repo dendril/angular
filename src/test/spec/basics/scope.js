@@ -219,4 +219,59 @@ describe('Basics: Scope', function () {
     expect(cb.calls.argsFor(3)[0]).toContain(10101);
   }));
 
+  it('provides an basic event system ($broadcast, $emit, $on)', inject(function () {
+    var l0 = scope;
+    var l1 = l0.$new();
+    var l2 = l1.$new();
+    var cb = jasmine.createSpy('listener');
+
+    l0.$on('evt', cb);
+    l1.$on('evt', cb);
+    l2.$on('evt', cb);
+
+    l0.$broadcast('evt');
+
+    expect(cb.calls.count()).toBe(3);
+
+    l1.$emit('evt');
+
+    expect(cb.calls.count()).toBe(5);
+  }));
+
+  it('provides an basic event system (preventDefault, stopPropagation)', inject(function () {
+    var l0 = scope;
+    var l1 = l0.$new();
+    var l2 = l1.$new();
+    var cb = jasmine.createSpy('listener');
+
+    var preventDefault = function(evt) {
+      // sets the flag of defaultPrevented to true
+      evt.preventDefault();
+    };
+
+    var stopPropagation = function(evt) {
+      // Broadcasted events does not provides this method (not cancelable)
+      evt.stopPropagation && evt.stopPropagation();
+    };
+
+    l0.$on('evt', cb);
+    // l1.$on('evt', cb); // stopPropagation does affect the current node listeners
+    l1.$on('evt', stopPropagation);
+    l1.$on('evt', preventDefault);
+    l1.$on('evt', cb);
+    l2.$on('evt', cb);
+
+    l0.$broadcast('evt');
+
+    // there is no way to prevent calling when using $broadcast
+    expect(cb.calls.count()).toBe(3);
+
+    // looks like evt object is the same for all the chain! (true are for ALL the cb calls)
+    expect(_(cb.calls.allArgs()).flatten().pluck('defaultPrevented').value()).toEqual([true, true, true]);
+
+    l2.$emit('evt');
+
+    // stopPropagation take place here and the cb hooked at l0 is never called
+    expect(cb.calls.count()).toBe(3 + 2 /* just 2 jumps! */);
+  }));
 });
