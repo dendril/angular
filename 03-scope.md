@@ -77,12 +77,21 @@ Scopes behave like native javascript objects with extra magic:
     scope.data.lastname = 'Grecy';
     ```
 
+
 ## Event system
 
-1. `$scope.$broadcast` go down into the scope tree.
-2. `$scope.$emit` go up into the scope tree.
-3. `$scope.$on` event register.
-4. `$scope.$broadcast` and `$scope.$emit` should be used sparingly.
+The scope tree is a base for notify different events between parts of your app, but keep in mind that events bubbles across all the tree and you don't have full control over propagation to handle performance problems.
+
+1. `$scope.$broadcast` go down into the scope tree from a given node.
+2. `$scope.$emit` go up into the scope tree from a given node.
+3. `$scope.$on` scope event listener.
+4. use `$scope.$broadcast` and `$scope.$emit` with responsability.
+5. to handle propagation, please see the test switch about the event system.
+
+
+## Integration with the browser event loop (digest cycle)
+
+
 
 ## References
 
